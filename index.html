@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Media Pembelajaran Interaktif - Sistem Komputer</title>
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3f37c9;
+            --secondary: #4cc9f0;
+            --success: #2ec4b6;
+            --danger: #e63946;
+            --warning: #ffb703;
+            --bg: #f8f9fa;
+            --card-bg: #ffffff;
+            --text: #2b2d42;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* HEADER & NAVIGATION */
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 1rem 2rem;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        header h1 {
+            font-size: 1.6rem;
+            margin-bottom: 0.2rem;
+        }
+
+        header p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            background: #fff;
+            padding: 0.8rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .nav-btn {
+            background: none;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            padding: 0.6rem 1.2rem;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-btn:hover, .nav-btn.active {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2rem);
+            box-shadow: 0 4px 8px rgba(67, 97, 238, 0.3);
+            transform: translateY(-2px);
+        }
+
+        /* MAIN CONTAINER */
+        main {
+            flex: 1;
+            max-width: 1000px;
+            width: 100%;
+            margin: 1.5rem auto;
+            padding: 0 1rem;
+        }
+
+        .section {
+            display: none;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* CARDS & UI COMPONENTS */
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border: 1px solid #e9ecef;
+        }
+
+        .card h2 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 0.5rem;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1rem;
+        }
+
+        /* MENU BELAJAR INTERAKTIF */
+        .interactive-diagram {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            background: #eef2ff;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 1rem 0;
+        }
+
+        .diag-box {
+            background: white;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: transform 0.2s;
+            border-left: 5px solid var(--primary);
+        }
+
+        .diag-box:hover {
+            transform: scale(1.05);
+            background: var(--primary);
+            color: white;
+        }
+
+        .tab-btn-group {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            padding: 0.5rem 1rem;
+            background: #e9ecef;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .tab-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* GAMES & QUIZ STYLE */
+        .quiz-container {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .option-btn {
+            display: block;
+            width: 100%;
+            padding: 0.8rem 1rem;
+            margin: 0.5rem 0;
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            text-align: left;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+        }
+
+        .option-btn:hover {
+            background: #eef2ff;
+            border-color: var(--primary);
+        }
+
+        /* DRAG AND DROP / MATCHING */
+        .drag-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .draggable {
+            padding: 0.6rem 1.2rem;
+            background: var(--secondary);
+            color: white;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: grab;
+            user-select: none;
+        }
+
+        .dropzone-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .dropzone {
+            min-height: 80px;
+            background: #f1f3f5;
+            border: 2px dashed #ced4da;
+            border-radius: 8px;
+            padding: 0.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .dropzone h4 {
+            font-size: 0.85rem;
+            color: #6c757d;
+            margin-bottom: 0.3rem;
+        }
+
+        /* FEEDBACK & SCORE */
+        .feedback {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            display: none;
+            font-weight: 500;
+        }
+
+        .feedback.correct {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            display: block;
+        }
+
+        .feedback.wrong {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            display: block;
+        }
+
+        .score-board {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--primary);
+            text-align: right;
+            margin-bottom: 1rem;
+        }
+
+        .btn-action {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.7rem 1.5rem;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
+
+        .btn-action:hover {
+            background: var(--primary-dark);
+        }
+
+        /* RESPONSIVE DESIGN */
+        @media (max-width: 600px) {
+            header h1 { font-size: 1.2rem; }
+            nav { flex-wrap: wrap; }
+            .nav-btn { font-size: 0.85rem; padding: 0.5rem 0.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Media Pembelajaran Interaktif: Sistem Komputer</h1>
+        <p>Informatika SMA Kelas X (Fase E) - Kurikulum Merdeka</p>
+    </header>
+
+    <nav>
+        <button class="nav-btn active" onclick="switchTab('belajar')">📖 Belajar</button>
+        <button class="nav-btn" onclick="switchTab('bermain')">🎮 Bermain</button>
+        <button class="nav-btn" onclick="switchTab('latihan')">🧠 Latihan HOTS</button>
+    </nav>
+
+    <main>
+        <!-- ================================================= =-->
+        <!-- 1. MENU BELAJAR                                   -->
+        <!-- ================================================= =-->
+        <section id="belajar" class="section active">
+            <div class="card">
+                <h2>Peta Konsep Sistem Komputer</h2>
+                <p>Klik pada salah satu elemen untuk melihat penjelasannya secara mendalam!</p>
+                <div class="interactive-diagram">
+                    <div class="diag-box" onclick="showBelajarDetail('hardware')">🖥️ Perangkat Keras<br><small>(Hardware)</small></div>
+                    <div style="font-size: 1.5rem; color: var(--primary);">↔️</div>
+                    <div class="diag-box" onclick="showBelajarDetail('software')">💿 Perangkat Lunak<br><small>(Software)</small></div>
+                    <div style="font-size: 1.5rem; color: var(--primary);">↔️</div>
+                    <div class="diag-box" onclick="showBelajarDetail('brainware')">👨‍💻 Pengguna<br><small>(Brainware)</small></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="tab-btn-group">
+                    <button class="tab-btn active" onclick="openSubTab('hw-tab')">Hardware</button>
+                    <button class="tab-btn" onclick="openSubTab('sw-tab')">Software</button>
+                    <button class="tab-btn" onclick="openSubTab('bw-tab')">Brainware</button>
+                </div>
+
+                <!-- Sub Tab Hardware -->
+                <div id="hw-tab" class="tab-content active">
+                    <h3>Perangkat Keras (Hardware)</h3>
+                    <p>Komponen fisik komputer yang mengolah data berdasarkan siklus <strong>IPO (Input - Process - Output)</strong>.</p>
+                    <br>
+                    <div class="grid-2">
+                        <div style="background:#f8f9fa; padding:1rem; border-radius:8px;">
+                            <strong>1. Input Device (Masukan)</strong>
+                            <p>Perangkat untuk memasukkan data/perintah (Contoh: Keyboard, Mouse, Scanner, Mikrofon).</p>
+                        </div>
+                        <div style="background:#f8f9fa; padding:1rem; border-radius:8px;">
+                            <strong>2. Process Device (Pemrosesan)</strong>
+                            <p>Otak komputer yang mengolah data: <strong>CPU</strong> (terdiri atas ALU, CU, dan Register) & <strong>GPU</strong>.</p>
+                        </div>
+                        <div style="background:#f8f9fa; padding:1rem; border-radius:8px;">
+                            <strong>3. Storage Device (Penyimpanan)</strong>
+                            <p><strong>Primary:</strong> RAM (Volatile), ROM (Non-volatile).<br><strong>Secondary:</strong> SSD, HDD, Flashdisk.</p>
+                        </div>
+                        <div style="background:#f8f9fa; padding:1rem; border-radius:8px;">
+                            <strong>4. Output Device (Keluaran)</strong>
+                            <p>Menampilkan hasil olahan data (Contoh: Monitor, Printer, Speaker).</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sub Tab Software -->
+                <div id="sw-tab" class="tab-content">
+                    <h3>Perangkat Lunak (Software)</h3>
+                    <p>Sekumpulan instruksi/program elektronik yang mengontrol hardware.</p>
+                    <br>
+                    <ul>
+                        <li><strong>Sistem Operasi (OS):</strong> Pengelola utama sumber daya komputer (Contoh: Windows, Linux, macOS, Android).</li>
+                        <li><strong>Program Aplikasi:</strong> Software khusus untuk membantu pekerjaan (Contoh: Ms. Word, Chrome, Photoshop).</li>
+                        <li><strong>Bahasa Pemrograman:</strong> Alat untuk membuat software (Contoh: Python, C++, JavaScript).</li>
+                        <li><strong>Program Utility:</strong> Software penunjang perawatan sistem (Contoh: Antivirus, WinRAR).</li>
+                    </ul>
+                </div>
+
+                <!-- Sub Tab Brainware -->
+                <div id="bw-tab" class="tab-content">
+                    <h3>Pengguna Komputer (Brainware)</h3>
+                    <p>Manusia yang mengoperasikan dan merancang sistem komputer.</p>
+                    <br>
+                    <ul>
+                        <li><strong>System Analyst:</strong> Merancang arsitektur sistem.</li>
+                        <li><strong>Programmer:</strong> Menulis kode/membuat aplikasi.</li>
+                        <li><strong>Administrator:</strong> Mengelola jaringan & database.</li>
+                        <li><strong>Operator / End-User:</strong> Pengguna akhir aplikasi sehari-hari.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================================================= =-->
+        <!-- 2. MENU BERMAIN                                   -->
+        <!-- ================================================= =-->
+        <section id="bermain" class="section">
+            <div class="card">
+                <h2>Game 1: Menjodohkan Perangkat (Drag & Drop)</h2>
+                <p>Tarik item di bawah ini ke dalam kotak kategori yang tepat!</p>
+                <br>
+                <div class="drag-container" id="drag-items">
+                    <div class="draggable" draggable="true" id="item-ram" data-category="storage">RAM</div>
+                    <div class="draggable" draggable="true" id="item-mouse" data-category="input">Mouse</div>
+                    <div class="draggable" draggable="true" id="item-os" data-category="software">Windows 11</div>
+                    <div class="draggable" draggable="true" id="item-prog" data-category="brainware">Programmer</div>
+                    <div class="draggable" draggable="true" id="item-monitor" data-category="output">Monitor</div>
+                </div>
+
+                <div class="dropzone-container">
+                    <div class="dropzone" data-category="input">
+                        <h4>INPUT DEVICE</h4>
+                    </div>
+                    <div class="dropzone" data-category="storage">
+                        <h4>STORAGE DEVICE</h4>
+                    </div>
+                    <div class="dropzone" data-category="output">
+                        <h4>OUTPUT DEVICE</h4>
+                    </div>
+                    <div class="dropzone" data-category="software">
+                        <h4>SOFTWARE</h4>
+                    </div>
+                    <div class="dropzone" data-category="brainware">
+                        <h4>BRAINWARE</h4>
+                    </div>
+                </div>
+                <div id="game1-feedback" class="feedback"></div>
+            </div>
+
+            <div class="card">
+                <h2>Game 2: Kuis Konseptual Ringkas</h2>
+                <div class="score-board">Skor Kuis: <span id="game2-score">0</span></div>
+                <div id="quiz-game2">
+                    <p id="q2-text" style="font-size:1.1rem; font-weight:bold; margin-bottom:1rem;"></p>
+                    <div id="q2-options"></div>
+                    <div id="q2-feedback" class="feedback"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================================================= =-->
+        <!-- 3. MENU LATIHAN HOTS                             -->
+        <!-- ================================================= =-->
+        <section id="latihan" class="section">
+            <div class="card">
+                <h2>Soal Analisis Case-Based (HOTS)</h2>
+                <p>Analisislah skenario kasus berikut dengan cermat!</p>
+                <br>
+                
+                <div style="background:#fff3cd; padding:1rem; border-left:4px solid #ffc107; border-radius:4px; margin-bottom:1.5rem;">
+                    <strong>Skenario Kasus:</strong><br>
+                    Pak Budi adalah seorang <i>video editor</i> profesional. Saat melakukan <i>rendering</i> video 4K, komputernya sering <i>freeze</i> (macet) dan proses berjalan sangat lambat, padahal ia sudah menggunakan Processor Core i9 terbaru dan SSD NVMe 1TB.
+                </div>
+
+                <p><strong>Pertanyaan:</strong> Manakah tindakan <i>upgrade</i> hardware yang paling efektif untuk menyelesaikan masalah Pak Budi?</p>
+                
+                <button class="option-btn" onclick="checkHots1(false)">A. Mengganti SSD NVMe menjadi kapasitas 2TB</button>
+                <button class="option-btn" onclick="checkHots1(true)">B. Menambah kapasitas RAM dan memperbarui VRAM Graphics Card (GPU)</button>
+                <button class="option-btn" onclick="checkHots1(false)">C. Mengganti Keyboard & Mouse dengan spesifikasi Gaming</button>
+                <button class="option-btn" onclick="checkHots1(false)">D. Menginstal ulang Sistem Operasi ke versi yang lebih lama</button>
+
+                <div id="hots1-feedback" class="feedback"></div>
+            </div>
+
+            <div class="card">
+                <h2>Analisis Urutan Rancangan Sistem (HOTS)</h2>
+                <p>Urutkan tahapan perancangan sistem kasir minimarket dari awal hingga siap dipakai!</p>
+                <br>
+                <div id="hots-sequence">
+                    <p style="margin-bottom:0.5rem;">Urutkan opsi berikut berdasarkan logika implementasi:</p>
+                    <ol style="margin-left:1.5rem; line-height:2rem;">
+                        <li>System Analyst merancang alur sistem kasir.</li>
+                        <li>Programmer mengode aplikasi kasir.</li>
+                        <li>Administrator menginstal OS & Aplikasi ke Hardware.</li>
+                        <li>Kasir (End-User) mengoperasikan mesin kasir.</li>
+                    </ol>
+                    <br>
+                    <p>Apakah urutan di atas sudah benar secara teknis?</p>
+                    <button class="btn-action" style="background:var(--success);" onclick="checkHotsSeq(true)">Ya, Urutan Sudah Benar</button>
+                    <button class="btn-action" style="background:var(--danger);" onclick="checkHotsSeq(false)">Tidak, Urutan Salah</button>
+                </div>
+                <div id="hots2-feedback" class="feedback"></div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        /* ===================================================
+           AUDIO SYNTHESIZER (Tanpa File Eksternal)
+           =================================================== */
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        
+        function playSound(type) {
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            if (type === 'correct') {
+                osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
+                osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.1); // E5
+                gain.gain.fadeOut(audioCtx.currentTime + 0.3);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.3);
+            } else if (type === 'wrong') {
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(220, audioCtx.currentTime); // A3
+                osc.frequency.setValueAtTime(110, audioCtx.currentTime + 0.15); // A2
+                gain.gain.fadeOut(audioCtx.currentTime + 0.3);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.3);
+            }
+        }
+
+        /* ===================================================
+           TAB NAVIGATION LOGIC
+           =================================================== */
+        function switchTab(tabId) {
+            document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            
+            document.getElementById(tabId).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function openSubTab(subTabId) {
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            
+            document.getElementById(subTabId).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function showBelajarDetail(topic) {
+            if (topic === 'hardware') openSubTab('hw-tab');
+            if (topic === 'software') openSubTab('sw-tab');
+            if (topic === 'brainware') openSubTab('bw-tab');
+            
+            // Scroll otomatis ke kontainer tab
+            document.querySelector('.tab-btn-group').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        /* ===================================================
+           GAME 1: DRAG & DROP LOGIC
+           =================================================== */
+        const draggables = document.querySelectorAll('.draggable');
+        const dropzones = document.querySelectorAll('.dropzone');
+        let matchedCount = 0;
+
+        draggables.forEach(draggable => {
+            draggable.addEventListener('dragstart', () => {
+                draggable.classList.add('dragging');
+            });
+
+            draggable.addEventListener('dragend', () => {
+                draggable.classList.remove('dragging');
+            });
+        });
+
+        dropzones.forEach(dropzone => {
+            dropzone.addEventListener('dragover', e => {
+                e.preventDefault();
+            });
+
+            dropzone.addEventListener('drop', e => {
+                e.preventDefault();
+                const draggable = document.querySelector('.dragging');
+                if (!draggable) return;
+
+                const itemCategory = draggable.getAttribute('data-category');
+                const dropCategory = dropzone.getAttribute('data-category');
+
+                if (itemCategory === dropCategory) {
+                    dropzone.appendChild(draggable);
+                    draggable.setAttribute('draggable', 'false');
+                    draggable.style.background = 'var(--success)';
+                    draggable.style.cursor = 'default';
+                    playSound('correct');
+                    matchedCount++;
+
+                    if (matchedCount === 5) {
+                        const fb = document.getElementById('game1-feedback');
+                        fb.className = 'feedback correct';
+                        fb.innerText = '🎉 Luar Biasa! Semua perangkat berhasil dijodohkan dengan benar!';
+                    }
+                } else {
+                    playSound('wrong');
+                    const fb = document.getElementById('game1-feedback');
+                    fb.className = 'feedback wrong';
+                    fb.innerText = '❌ Kategori kurang tepat. Coba masukkan ke kotak yang lain!';
+                    setTimeout(() => { fb.style.display = 'none'; }, 2000);
+                }
+            });
+        });
+
+        /* ===================================================
+           GAME 2: QUIZ LOGIC
+           =================================================== */
+        const quizData = [
+            {
+                q: "Bagian CPU yang melakukan perhitungan aritmatika dan operasi logika adalah...",
+                options: ["Control Unit (CU)", "Arithmetic Logic Unit (ALU)", "Register", "ROM"],
+                ans: 1
+            },
+            {
+                q: "Mengapa RAM disebut bersifat Volatile?",
+                options: ["Harganya sangat mahal", "Data hilang saat listrik padam", "Penyimpanan bersifat permanen", "Ukurannya sangat kecil"],
+                ans: 1
+            }
+        ];
+
+        let currentQ = 0;
+        let scoreG2 = 0;
+
+        function loadQuizG2() {
+            if (currentQ >= quizData.length) {
+                document.getElementById('quiz-game2').innerHTML = `<h3>Selesai! Skor Akhir Anda: ${scoreG2}</h3>`;
+                return;
+            }
+
+            const q = quizData[currentQ];
+            document.getElementById('q2-text').innerText = `${currentQ + 1}. ${q.q}`;
+            const optContainer = document.getElementById('q2-options');
+            optContainer.innerHTML = '';
+
+            q.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerText = opt;
+                btn.onclick = () => checkAnsG2(idx);
+                optContainer.appendChild(btn);
+            });
+        }
+
+        function checkAnsG2(selectedIdx) {
+            const fb = document.getElementById('q2-feedback');
+            if (selectedIdx === quizData[currentQ].ans) {
+                playSound('correct');
+                scoreG2 += 50;
+                document.getElementById('game2-score').innerText = scoreG2;
+                fb.className = 'feedback correct';
+                fb.innerText = 'Jawaban Benar! 👏';
+            } else {
+                playSound('wrong');
+                fb.className = 'feedback wrong';
+                fb.innerText = 'Jawaban Salah! Jawaban tepat: ' + quizData[currentQ].options[quizData[currentQ].ans];
+            }
+
+            setTimeout(() => {
+                fb.style.display = 'none';
+                currentQ++;
+                loadQuizG2();
+            }, 1800);
+        }
+
+        loadQuizG2();
+
+        /* ===================================================
+           HOT EXERCISES LOGIC
+           =================================================== */
+        function checkHots1(isCorrect) {
+            const fb = document.getElementById('hots1-feedback');
+            if (isCorrect) {
+                playSound('correct');
+                fb.className = 'feedback correct';
+                fb.innerHTML = '<strong>Tepat Sekali! (Analisis Benar)</strong><br>Proses rendering video 4K membutuhkan komputasi grafis berat yang dibebankan pada GPU (VRAM) serta penampungan frame data sementara pada RAM. Memperbesar RAM & GPU adalah solusi mutlak untuk bottleneck rendering.';
+            } else {
+                playSound('wrong');
+                fb.className = 'feedback wrong';
+                fb.innerHTML = '<strong>Kurang Tepat.</strong><br>Mengganti SSD tidak menyelesaikan masalah rendering macet karena SSD Pak Budi sudah berkecepatan tinggi (NVMe). Masalah macet saat rendering diakibatkan oleh kapasitas RAM & VRAM yang habis.';
+            }
+        }
+
+        function checkHotsSeq(userAns) {
+            const fb = document.getElementById('hots2-feedback');
+            if (userAns === true) {
+                playSound('correct');
+                fb.className = 'feedback correct';
+                fb.innerHTML = '<strong>Analisis Benar!</strong><br>Urutan perancangan sistem komputer harus berurutan:<br>1. Analisis alur (System Analyst)<br>2. Pembuatan aplikasi (Programmer)<br>3. Pemasangan & Konfigurasi (Administrator)<br>4. Operasional (End-User Kasir)';
+            } else {
+                playSound('wrong');
+                fb.className = 'feedback wrong';
+                fb.innerText = 'Jawaban belum tepat. Urutan di atas sebenarnya sudah runtut secara hierarki rekayasa perangkat lunak!';
+            }
+        }
+    </script>
+</body>
+</html>
